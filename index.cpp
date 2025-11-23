@@ -2,32 +2,6 @@
 #include <random>
 using namespace std;
 
-void retornaSimbolo(int senhaReal, int chute) {
-    int senha1, senha2, senha3, senha4;
-    senha1 = senhaReal / 1000;
-    senha2 = (senhaReal / 100) % 10;
-    senha3 = (senhaReal / 10) % 10;
-    senha4 = senhaReal % 10;
-
-    int chute1, chute2, chute3, chute4;
-    chute1 = chute / 1000;
-    chute2 = (chute / 100) % 10;
-    chute3 = (chute / 10) % 10;
-    chute4 = chute % 10;
-
-    char simbolo1, simbolo2, simbolo3, simbolo4;
-
-    // Terminar lógica de comparação e atribuição de símbolos
-
-    if (simbolo1 == 'O' && simbolo2 == 'O' && simbolo3 == 'O' && simbolo4 == 'O') {
-        cout << "Senha correta! Você venceu!" << endl;
-        exit(0);
-    }
-
-    cout << "****" << endl;
-    cout << simbolo1 << simbolo2 << simbolo3 << simbolo4 << endl;
-}
-
 int gerarSenha() {
     random_device rd;
     mt19937 gen(rd());
@@ -43,26 +17,63 @@ int gerarSenha() {
     return senha;
 }
 
+char retornaSimbolo(int senhaReal, int chuteN, int posicao) {
+    int senha1 = senhaReal / 1000;
+    int senha2 = (senhaReal / 100) % 10;
+    int senha3 = (senhaReal / 10) % 10;
+    int senha4 = senhaReal % 10;
+
+    if ((posicao == 1 && chuteN == senha1) ||
+        (posicao == 2 && chuteN == senha2) ||
+        (posicao == 3 && chuteN == senha3) ||
+        (posicao == 4 && chuteN == senha4)) {
+        return 'O';
+    } else if (chuteN == senha1 || chuteN == senha2 ||
+               chuteN == senha3 || chuteN == senha4) {
+        return 'X';
+    } else {
+        return '_';
+    }
+    
+}
+
 void verificarSenha(int senhaReal) {
     int tentativas = 0;
-    int senha1, senha2, senha3, senha4;
-    senha1 = senhaReal / 1000;
-    senha2 = (senhaReal / 100) % 10;
-    senha3 = (senhaReal / 10) % 10;
-    senha4 = senhaReal % 10;
+    char simbolo1, simbolo2, simbolo3, simbolo4;
 
     while (tentativas < 10) {
         int chute;
         cout << "Digite sua tentativa (4 dígitos de 1 a 6): ";
         cin >> chute;
-        retornaSimbolo(senhaReal, chute);
+        if (chute < 1111 || chute > 6666) {
+            cout << "Chute inválido. Tente novamente." << endl;
+            continue;
+        }
+
+        int chute1 = chute / 1000;
+        int chute2 = (chute / 100) % 10;
+        int chute3 = (chute / 10) % 10;
+        int chute4 = chute % 10;
+
+        simbolo1 = retornaSimbolo(senhaReal, chute1 , 1);
+        simbolo2 = retornaSimbolo(senhaReal, chute2, 2);
+        simbolo3 = retornaSimbolo(senhaReal, chute3, 3);
+        simbolo4 = retornaSimbolo(senhaReal, chute4, 4);
+
+        if (chute == senhaReal) {
+            cout << "Parabéns! Você acertou a senha!" << endl;
+            return;
+        }
+        
+        cout << "****" << endl;
+        cout << simbolo1 << simbolo2 << simbolo3 << simbolo4 << endl;
 
         tentativas++;
     }
 
     if(tentativas == 10) {
         cout << "Número máximo de tentativas atingido. A senha era: "
-             << senha1 << senha2 << senha3 << senha4 << endl;
+             << senhaReal << endl;
     }
 }
 
