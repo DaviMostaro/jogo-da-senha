@@ -45,8 +45,11 @@ void verificarSenha(int senhaReal) {
         int chute;
         cout << "Digite sua tentativa (4 dígitos de 1 a 6): ";
         cin >> chute;
-        if (chute < 1111 || chute > 6666) {
-            cout << "Chute inválido. Tente novamente." << endl;
+
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Entrada inválida. Tente novamente." << endl;
             continue;
         }
 
@@ -54,6 +57,14 @@ void verificarSenha(int senhaReal) {
         int chute2 = (chute / 100) % 10;
         int chute3 = (chute / 10) % 10;
         int chute4 = chute % 10;
+
+        if (chute1 < 1 || chute1 > 6 ||
+            chute2 < 1 || chute2 > 6 ||
+            chute3 < 1 || chute3 > 6 ||
+            chute4 < 1 || chute4 > 6) {
+            cout << "Chute inválido. Tente novamente." << endl;
+            continue;
+        }
 
         simbolo1 = retornaSimbolo(senhaReal, chute1 , 1);
         simbolo2 = retornaSimbolo(senhaReal, chute2, 2);
@@ -65,7 +76,7 @@ void verificarSenha(int senhaReal) {
             return;
         }
         
-        cout << "****" << endl;
+        cout << chute << endl;
         cout << simbolo1 << simbolo2 << simbolo3 << simbolo4 << endl;
 
         tentativas++;
